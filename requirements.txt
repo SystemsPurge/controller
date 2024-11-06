@@ -1,6 +1,7 @@
 kombu
 termcolor
 pandas
+scipy
 psutil
 dpsim
 requests
