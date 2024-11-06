@@ -47,7 +47,6 @@ class KubernetesManager(Manager):
 
         self._check_namespace(self.namespace)
 
-        # self.pod_watcher_thread.start()
         # self.job_watcher_thread.start()
         self.event_watcher_thread.setDaemon(True)
         self.event_watcher_thread.start()
