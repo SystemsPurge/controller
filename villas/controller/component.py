@@ -117,8 +117,7 @@ class Component:
 
     def validate_parameters(self, action, parameters):
         if action in self.schema:
-            validator = self.schema[action]
-
+            validator = Draft202012Validator(schema=self.schema[action])
             validator.validate(parameters)
 
         else:
