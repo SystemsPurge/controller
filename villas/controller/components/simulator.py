@@ -111,14 +111,21 @@ class Simulator(Component):
 
     def _upload(self, filename):
         url = self.results['url']
+        params={"url":url}
+        if "token" in self.results:
+            params["headers"] = {"Authorization":f"Bearer {self.model["token"]}"}
         with open(filename, 'rb') as f:
+            params["body"] = f
             r = requests.put(url, body=f)
             r.raise_for_status()
 
             self.logger.info(f'Uploaded file {filename} to {url}')
 
     def _download(self, url):
-        with requests.get(url, stream=True) as r:
+        params = {"url":url,"stream":True}
+        if "token" in self.model:
+            params["headers"] = {"Authorization":f"Bearer {self.model["token"]}"}
+        with requests.get(**params) as r:
             r.raise_for_status()
             with tempfile.NamedTemporaryFile(delete=False, suffix='.xml') as f:
                 for chunk in r.iter_content(chunk_size=8192):

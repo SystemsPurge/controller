@@ -27,6 +27,7 @@ class DPsimSimulator(Simulator):
             os.unlink(fp.name)
 
     def start(self, payload):
+        super().start(payload)
         fp = self.download_model(payload)
         if fp:
             self.load_cim(fp)
