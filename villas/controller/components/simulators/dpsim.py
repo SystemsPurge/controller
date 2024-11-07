@@ -63,19 +63,18 @@ class DPsimSimulator(Simulator):
         if fp:
             self.load_cim(fp)
 
-        if self.change_state('starting'):
+        try:
+            self.change_state('starting')
             self.logger.info('Starting simulation...')
 
             self.logger.info(self.sim)
-            check = self.sim.start()
-            self.logger.info(f"+++++{check}+++++")
-            if check is None:
+            if self.sim.start() is None:
                 self.change_state('running')
             else:
                 self.change_to_error('failed to start simulation')
                 self.logger.warn('Attempt to start simulator failed.'
                                  'State is %s', self._state)
-        else:
+        except Exception as e:
             self.logger.warn('Attempted to start non-stopped simulator.'
                              'State is %s', self._state)
 
