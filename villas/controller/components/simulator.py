@@ -108,7 +108,7 @@ class Simulator(Component):
         self.sim_workdir = os.path.join(self.workdir, 'simulation',
                                         str(self.simuuid))
 
-        self.sim_logdir = self.sim_workdir + '/logs/'
+        self.sim_logdir = self.sim_workdir + '/Logs/'
         self.logger.info('Simulation working directory: %s' % self.sim_workdir)
 
         try:

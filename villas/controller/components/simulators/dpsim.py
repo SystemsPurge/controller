@@ -22,7 +22,8 @@ class DPsimSimulator(Simulator):
 
     def load_cim(self, fp):
         if fp is not None:
-            reader = dpsimpy.CIMReader(fp)
+            name = self.params.get("name",str(os.urandom(6).hex()))
+            reader = dpsimpy.CIMReader(name)
             files = list(map(lambda x: f'{fp}/{x}',os.listdir(fp)))
             freq = self.params.get("system-freq",50)
             duration = self.params.get("duration",10)
@@ -43,13 +44,13 @@ class DPsimSimulator(Simulator):
                 solver = dpsimpy.Solver.NRP
             
             system = reader.loadCIM(freq, files, domain, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
-            self.sim = dpsimpy.Simulation(fp)
+            self.sim = dpsimpy.Simulation(name)
             self.sim.set_system(system)
             self.sim.set_domain(domain)
             self.sim.set_solver(solver)
             self.sim.set_time_step(timestep)
             self.sim.set_final_time(duration)
-            logger = dpsimpy.Logger(fp)
+            logger = dpsimpy.Logger(name)
             for node in system.nodes:
                 logger.log_attribute(node.name()+'.V', 'v', node)
             self.sim.add_logger(logger)
@@ -74,10 +75,25 @@ class DPsimSimulator(Simulator):
                 self.change_to_error('failed to start simulation')
                 self.logger.warn('Attempt to start simulator failed.'
                                  'State is %s', self._state)
+
+            self.upload_results()
+            self.change_state('stopping')
         except Exception as e:
             self.logger.warn('Attempted to start non-stopped simulator.'
                              'State is %s', self._state)
 
+    def reset(self,payload):
+        self.sim = None
+        self.params = None
+        self.model = None
+        self.results = None
+        try:
+            self.change_state('resetting')
+        except Exception as e:
+            self.change_state('error')
+        else:
+            self.change_state('idle')
+    
     def stop(self, payload):
         if self._state == 'running':
             self.logger.info('Stopping simulation...')
