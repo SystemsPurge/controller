@@ -42,13 +42,13 @@ class DPsimSimulator(Simulator):
             else:
                 solver = dpsimpy.Solver.NRP
             
-            system = reader.loadCIM(freq, files, domain, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode) #self.params system-freq
+            system = reader.loadCIM(freq, files, domain, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
             self.sim = dpsimpy.Simulation(fp)
             self.sim.set_system(system)
-            self.sim.set_domain(domain) #self.params solver-domain
-            self.sim.set_solver(solver) #self.params solver-type
-            self.sim.set_time_step(timestep) #self.params timestep
-            self.sim.set_final_time(duration) #self.params duration
+            self.sim.set_domain(domain)
+            self.sim.set_solver(solver)
+            self.sim.set_time_step(timestep)
+            self.sim.set_final_time(duration)
             logger = dpsimpy.Logger(fp)
             for node in system.nodes:
                 logger.log_attribute(node.name()+'.V', 'v', node)
