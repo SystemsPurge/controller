@@ -24,7 +24,6 @@ class DPsimSimulator(Simulator):
         if fp is not None:
             reader = dpsimpy.CIMReader(fp)
             files = list(map(lambda x: f'{fp}/{x}',os.listdir(fp)))
-            self.logger.info(files)
             freq = self.params.get("system-freq",50)
             duration = self.params.get("duration",10)
             timestep = self.params.get("timestep",1)
@@ -55,7 +54,8 @@ class DPsimSimulator(Simulator):
                 logger.log_attribute(node.name()+'.V', 'v', node)
             self.sim.add_logger(logger)
             self.logger.info(self.sim)
-            os.unlink(fp)
+            for file in files:
+                os.unlink(file)
 
     def start(self, payload):
         super().start(payload)
