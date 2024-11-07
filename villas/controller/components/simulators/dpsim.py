@@ -67,7 +67,9 @@ class DPsimSimulator(Simulator):
             self.logger.info('Starting simulation...')
 
             self.logger.info(self.sim)
-            if self.sim.start() is None:
+            check = self.sim.start()
+            self.logger.info(f"+++++{check}+++++")
+            if check is None:
                 self.change_state('running')
             else:
                 self.change_to_error('failed to start simulation')
