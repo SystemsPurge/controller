@@ -1,4 +1,4 @@
-import dpsim
+import dpsimpy
 import os
 
 from villas.controller.components.simulator import Simulator
@@ -22,7 +22,8 @@ class DPsimSimulator(Simulator):
 
     def load_cim(self, fp):
         if fp is not None:
-            self.sim = dpsim.load_cim(fp.name)
+            reader = dpsimpy.CIMReader(fp)
+            self.sim = reader.loadCIM(50, list([fp]), dpsimpy.Domain.SP, dpsimpy.PhaseType.Single, dpsimpy.GeneratorType.PVNode)
             self.logger.info(self.sim)
             os.unlink(fp.name)
 
